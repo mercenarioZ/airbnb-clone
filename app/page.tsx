@@ -1,4 +1,3 @@
-
 export default function Home() {
-  return <div>hello airbnb</div>;
+  return <div className="text-rose-500 text-3xl">hello</div>;
 }
