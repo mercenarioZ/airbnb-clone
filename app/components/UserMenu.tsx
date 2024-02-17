@@ -1,10 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import Avatar from "./Avatar";
+import MenuItem from "./MenuItem";
+import useRegisterModal from "../hooks/useRegisterModal";
 
 const UserMenu = () => {
+  const registerModal = useRegisterModal();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenuOpen = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
+
   return (
     <div className="relative">
       <div className="flex items-center gap-2">
@@ -16,7 +25,10 @@ const UserMenu = () => {
         </div>
 
         {/* Menu icon and avatar */}
-        <div className="p-4 md:py-1 md:px-3 border-[1px] border-neutral-200 flex items-center gap-2 rounded-full cursor-pointer transition hover:shadow-md">
+        <div
+          onClick={toggleMenuOpen}
+          className="p-4 md:py-1 md:px-3 border-[1px] border-neutral-200 flex items-center gap-2 rounded-full cursor-pointer transition hover:shadow-md"
+        >
           <AiOutlineMenu />
 
           {/* Avatar */}
@@ -25,6 +37,18 @@ const UserMenu = () => {
           </div>
         </div>
       </div>
+
+      {/* open the menu when isOpen state is true */}
+      {isOpen && (
+        <div className="absolute w-[30vw] md:w-3/4 rounded-xl bg-white shadow-md right-0 top-16 md:top-12 overflow-hidden">
+          <div className="flex flex-col cursor-pointer">
+            <>
+              <MenuItem label="Login" />
+              <MenuItem onClick={registerModal.onOpen}  label="Sign up" />
+            </>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
