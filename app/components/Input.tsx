@@ -20,7 +20,7 @@ const Input: React.FC<InputProps> = ({
   disabled,
   register,
   required,
-  formatPrice = true,
+  formatPrice,
   errors,
 }) => {
   return (
@@ -32,11 +32,20 @@ const Input: React.FC<InputProps> = ({
         />
       )}
 
+      <label className="text-zinc-700">{label}</label>
+
       <input
         disabled={disabled}
         id={id}
         {...register(id, { required })}
-        placeholder=" "
+        type={type}
+        className={`
+          w-full p-3 mt-1 font-light bg-white border-[1px] rounded-md outline-none focus:border-black transition
+
+          ${formatPrice ? "pl-8" : "pl-4"}
+          ${errors[id] && "border-rose-500"}
+          ${errors[id] && "focus:border-rose-500"}
+        `}
       />
     </div>
   );

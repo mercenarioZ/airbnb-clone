@@ -1,18 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import useRegisterModal from "../hooks/useRegisterModal";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import axios from "axios";
-import Modal from "./Modal";
+import { FcGoogle } from "react-icons/fc";
+import useLoginModal from "../hooks/useLoginModal";
+import useRegisterModal from "../hooks/useRegisterModal";
+import Button from "./Button";
 import Heading from "./Heading";
 import Input from "./Input";
-import useLoginModal from "../hooks/useLoginModal";
-import Button from "./Button";
-import { FcGoogle } from "react-icons/fc";
+import Modal from "./Modal";
+import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-const RegisterModal = () => {
+const LoginModal = () => {
+  const router = useRouter();
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +25,6 @@ const RegisterModal = () => {
     formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
@@ -32,34 +33,29 @@ const RegisterModal = () => {
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
 
-    axios
-      .post("/api/register", data)
-      .then(() => {
-        registerModal.onClose();
-        
-        // display a success message
-        toast.success("Sign up successful!")
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => setIsLoading(false));
+    signIn("credentials", {
+      ...data,
+      redirect: false,
+    }).then((callback) => {
+      setIsLoading(false);
+
+      if (callback?.ok) {
+        toast.success("Logged in successfully.");
+        router.refresh();
+        loginModal.onClose();
+      }
+
+      if (callback?.error) {
+        toast.error(callback.error);
+      }
+    });
   };
 
   const body = (
     <div className="flex flex-col gap-4">
       <Heading
-        title="Welcome"
-        subtitle="Create an account to continue"
-      />
-
-      <Input
-        id="name"
-        label="Name"
-        disabled={isLoading}
-        register={register}
-        errors={errors}
-        required
+        title="Welcome back"
+        subtitle="Login to continue"
       />
 
       <Input
@@ -91,14 +87,16 @@ const RegisterModal = () => {
         outline
         label="Continue with Google"
         icon={FcGoogle}
-        onClick={() => {
-          toast.error("Google authentication is not yet implemented.");
-        }}
       />
 
       <div className="flex gap-1 text-neutral-600">
         <p>Already have an account?</p>
-        <p className="hover:text-rose-500 hover:underline transition cursor-pointer" onClick={loginModal.onOpen}>Login</p>
+        <p
+          className="hover:text-rose-500 hover:underline transition cursor-pointer"
+          onClick={loginModal.onOpen}
+        >
+          Login
+        </p>
       </div>
     </div>
   );
@@ -106,10 +104,10 @@ const RegisterModal = () => {
   return (
     <Modal
       disabled={isLoading}
-      isOpen={registerModal.isOpen}
-      title="Register"
+      isOpen={loginModal.isOpen}
+      title="Login"
       actionLabel="Continue"
-      onClose={registerModal.onClose}
+      onClose={loginModal.onClose}
       onSubmit={handleSubmit(onSubmit)}
       body={body}
       footer={footer}
@@ -117,4 +115,4 @@ const RegisterModal = () => {
   );
 };
 
-export default RegisterModal;
+export default LoginModal;
