@@ -65,7 +65,7 @@ const Modal: React.FC<ModalProps> = ({
       {/* modal background */}
       <div className="flex justify-center items-center z-50 fixed overflow-x-hidden overflow-y-auto outline-none focus:outline-none bg-neutral-600/70 inset-0">
         {/* modal container */}
-        <div className="relative w-full md:w-4/6 lg:w-3/5 my-6 mx-auto h-full lg:h-auto md:h-auto">
+        <div className="relative w-full md:w-4/6 lg:w-2/5 xl:w-2/6 my-6 mx-auto h-full lg:h-auto md:h-auto">
           {/* modal content */}
           <div
             className={`translate transition duration-300 h-full ${

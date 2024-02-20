@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import useLoginModal from "../hooks/useLoginModal";
@@ -51,6 +51,11 @@ const LoginModal = () => {
     });
   };
 
+  const toggleModal = useCallback(() => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [loginModal, registerModal]) 
+
   const body = (
     <div className="flex flex-col gap-4">
       <Heading
@@ -91,12 +96,12 @@ const LoginModal = () => {
       />
 
       <div className="flex gap-1 text-neutral-600">
-        <p>Already have an account?</p>
+        <p>Do not have an account?</p>
         <p
           className="hover:text-rose-500 hover:underline transition cursor-pointer"
-          onClick={loginModal.onOpen}
+          onClick={toggleModal}
         >
-          Login
+          Create an account
         </p>
       </div>
     </div>

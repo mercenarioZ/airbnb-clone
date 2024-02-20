@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import useRegisterModal from "../hooks/useRegisterModal";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
@@ -46,6 +46,11 @@ const RegisterModal = () => {
       })
       .finally(() => setIsLoading(false));
   };
+
+  const toggleModal = useCallback(() => {
+    registerModal.onClose();
+    loginModal.onOpen();
+  }, [loginModal, registerModal])
 
   const body = (
     <div className="flex flex-col gap-4">
@@ -97,7 +102,7 @@ const RegisterModal = () => {
 
       <div className="flex gap-1 text-neutral-600">
         <p>Already have an account?</p>
-        <p className="hover:text-rose-500 hover:underline transition cursor-pointer" onClick={loginModal.onOpen}>Login</p>
+        <p className="hover:text-rose-500 hover:underline transition cursor-pointer" onClick={toggleModal}>Login</p>
       </div>
     </div>
   );
