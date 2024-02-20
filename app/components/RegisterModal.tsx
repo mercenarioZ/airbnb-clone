@@ -11,6 +11,7 @@ import useLoginModal from "../hooks/useLoginModal";
 import Button from "./Button";
 import { FcGoogle } from "react-icons/fc";
 import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
 
 const RegisterModal = () => {
   const loginModal = useLoginModal();
@@ -91,9 +92,7 @@ const RegisterModal = () => {
         outline
         label="Continue with Google"
         icon={FcGoogle}
-        onClick={() => {
-          toast.error("Google authentication is not yet implemented.");
-        }}
+        onClick={() => signIn("google")}
       />
 
       <div className="flex gap-1 text-neutral-600">
