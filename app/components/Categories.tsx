@@ -12,7 +12,7 @@ import { FaSkiing } from "react-icons/fa";
 import { BsSnow } from "react-icons/bs";
 import { IoDiamond } from "react-icons/io5";
 
-const categories = [
+export const categories = [
   {
     label: "Beach",
     icon: TbBeach,
