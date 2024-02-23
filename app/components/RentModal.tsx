@@ -8,7 +8,9 @@ import Modal from "./Modal";
 import CategoryItem from "./CategoryItem";
 import { FieldValues, useForm } from "react-hook-form";
 import CountrySelect from "./CountrySelect";
-import Map from "./Map";
+import dynamic from "next/dynamic";
+import Counter from "./Counter";
+import ImageUpload from "./ImageUpload";
 
 enum steps {
   category,
@@ -42,7 +44,7 @@ const RentModal = () => {
   } = useForm<FieldValues>({
     defaultValues: {
       category: "",
-      location: "",
+      location: null,
       imageSrc: "",
       description: "",
       price: "",
@@ -55,6 +57,15 @@ const RentModal = () => {
 
   const watchedCategory = watch("category");
   const watchedLocation = watch("location");
+  const watchedGuestCount = watch("guestCount");
+  const watchedRoomCount = watch("roomCount");
+  const watchedBathroomCount = watch("bathroomCount");
+
+  const Map = useMemo(
+    () => dynamic(() => import("./Map"), { ssr: false }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [location]
+  );
 
   const customSetValue = (id: string, value: any) => {
     setValue(id, value, {
@@ -107,10 +118,10 @@ const RentModal = () => {
     </div>
   );
 
-  // Location step
+  // Step 2: Location
   if (step === steps.location) {
     body = (
-      <div>
+      <div className="flex flex-col gap-3">
         <Heading
           title="Where is your property located?"
           subtitle="Enter the address of your property"
@@ -121,7 +132,54 @@ const RentModal = () => {
           onChange={(value) => customSetValue("location", value)}
         />
 
-        <Map />
+        <Map center={watchedLocation?.latlng} />
+      </div>
+    );
+  }
+
+  // Step 3: Info
+  if (step === steps.info) {
+    body = (
+      <div className="flex flex-col gap-3">
+        <Heading
+          title="Tell us more about your place"
+          subtitle="Provide some basic information about your property"
+        />
+
+        <Counter
+          title="Guests"
+          subtitle="How many guests do you allow?"
+          value={watchedGuestCount}
+          onChange={(value) => customSetValue("guestCount", value)}
+        />
+
+        <Counter
+          title="Rooms"
+          subtitle="How many rooms do you have?"
+          value={watchedRoomCount}
+          onChange={(value) => customSetValue("roomCount", value)}
+        />
+
+        <Counter
+          title="Bathrooms"
+          subtitle="How many bathrooms do you have?"
+          value={watchedBathroomCount}
+          onChange={(value) => customSetValue("bathroomCount", value)}
+        />
+      </div>
+    );
+  }
+
+  // Step 4: Images
+  if (step === steps.images) {
+    body = (
+      <div className="flex flex-col gap-3">
+        <Heading
+          title="Add some images"
+          subtitle="Upload some images of your place"
+        />
+
+        <ImageUpload />
       </div>
     );
   }
