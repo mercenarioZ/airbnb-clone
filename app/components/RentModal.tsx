@@ -1,16 +1,20 @@
 "use client";
 
+import axios from "axios";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import useRentModal from "../hooks/useRentModal";
 import { categories } from "./Categories";
-import Heading from "./Heading";
-import Modal from "./Modal";
 import CategoryItem from "./CategoryItem";
-import { FieldValues, useForm } from "react-hook-form";
-import CountrySelect from "./CountrySelect";
-import dynamic from "next/dynamic";
 import Counter from "./Counter";
+import CountrySelect from "./CountrySelect";
+import Heading from "./Heading";
 import ImageUpload from "./ImageUpload";
+import Input from "./Input";
+import Modal from "./Modal";
 
 enum steps {
   category,
@@ -22,9 +26,12 @@ enum steps {
 }
 
 const RentModal = () => {
+  const router = useRouter();
   const rentModal = useRentModal();
 
   const [step, setStep] = useState(steps.category);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const onGoBack = () => {
     setStep((val) => val - 1);
@@ -32,6 +39,34 @@ const RentModal = () => {
 
   const onGoNext = () => {
     setStep((val) => val + 1);
+  };
+
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    console.log(data);
+
+    if (step !== steps.price) {
+      return onGoNext();
+    }
+
+    setIsLoading(true);
+
+    axios
+      .post("/api/listings", data)
+      .then(() => {
+        toast.success("Your property has been listed!");
+
+        router.refresh();
+
+        // reset the entire form
+        reset();
+        setStep(steps.category);
+
+        rentModal.onClose();
+      })
+      .catch(() => {
+        toast.error("Something went wrong...");
+      })
+      .finally(() => setIsLoading(false));
   };
 
   const {
@@ -47,7 +82,7 @@ const RentModal = () => {
       location: null,
       imageSrc: "",
       description: "",
-      price: "",
+      price: 1,
       title: "",
       roomCount: 1,
       bathroomCount: 1,
@@ -60,6 +95,7 @@ const RentModal = () => {
   const watchedGuestCount = watch("guestCount");
   const watchedRoomCount = watch("roomCount");
   const watchedBathroomCount = watch("bathroomCount");
+  const watchedImageSrc = watch("imageSrc");
 
   const Map = useMemo(
     () => dynamic(() => import("./Map"), { ssr: false }),
@@ -179,7 +215,63 @@ const RentModal = () => {
           subtitle="Upload some images of your place"
         />
 
-        <ImageUpload />
+        <ImageUpload
+          value={watchedImageSrc}
+          onChange={(value) => customSetValue("imageSrc", value)}
+        />
+      </div>
+    );
+  }
+
+  // Step 5: Description
+  if (step === steps.description) {
+    body = (
+      <div className="flex flex-col gap-3">
+        <Heading
+          title="Describe your place"
+          subtitle="Provide a brief description of your property"
+        />
+
+        <Input
+          id="title"
+          label="Title"
+          register={register}
+          errors={errors}
+          required
+          disabled={isLoading}
+        />
+
+        <Input
+          id="description"
+          label="Description"
+          register={register}
+          errors={errors}
+          required
+          disabled={isLoading}
+        />
+      </div>
+    );
+  }
+
+  // Step 6: Price
+  if (step === steps.price) {
+    body = (
+      <div className="flex flex-col gap-3">
+        <Heading
+          title="Set the price"
+          subtitle="How much do you want to charge for your property?"
+        />
+
+        <Input
+          id="price"
+          label="Price (USD per night)"
+          type="number"
+          register={register}
+          errors={errors}
+          required
+          disabled={isLoading}
+          formatPrice
+        />
       </div>
     );
   }
@@ -189,7 +281,7 @@ const RentModal = () => {
       title="Airbnb your home"
       isOpen={rentModal.isOpen}
       onClose={rentModal.onClose}
-      onSubmit={onGoNext}
+      onSubmit={handleSubmit(onSubmit)}
       actionLabel={actionLabel}
       secondaryAction={step === steps.category ? undefined : onGoBack}
       secondaryActionLabel={secondaryActionLabel}

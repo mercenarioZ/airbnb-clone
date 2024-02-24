@@ -25,14 +25,15 @@ const Input: React.FC<InputProps> = ({
 }) => {
   return (
     <div className="w-full relative">
-      {formatPrice && (
-        <BiDollar
-          size={22}
-          className="text-neutral-600"
-        />
-      )}
-
-      <label className="text-zinc-700">{label}</label>
+      <div className="flex items-center mb-2">
+        {formatPrice && (
+          <BiDollar
+            size={22}
+            className="text-neutral-600"
+          />
+        )}
+        <label className="text-zinc-700">{label}</label>
+      </div>
 
       <input
         disabled={disabled}
@@ -42,7 +43,6 @@ const Input: React.FC<InputProps> = ({
         className={`
           w-full p-3 mt-1 font-light bg-white border-[1px] rounded-md outline-none focus:border-black transition
 
-          ${formatPrice ? "pl-8" : "pl-4"}
           ${errors[id] && "border-rose-500"}
           ${errors[id] && "focus:border-rose-500"}
         `}
