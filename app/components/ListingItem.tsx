@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import Image from "next/image";
 import HeartButton from "./HeartButton";
+import Button from "./Button";
 
 interface ListingItemProps {
   data: Listing;
@@ -32,7 +33,7 @@ const ListingItem: React.FC<ListingItemProps> = ({
   // this is a helper function to get the location object from the country code
   const location = getByValue(data.locationValue);
 
-  const handleAction = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleCancel = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
 
     if (disabled) return;
@@ -90,7 +91,21 @@ const ListingItem: React.FC<ListingItemProps> = ({
 
         <div className="flex items-center gap-1">
           <div className="font-semibold">$ {price()}</div>
+
+          {!reservation && (
+            <div className="font-light">night</div>
+          )}
         </div>
+
+        {/* action button */}
+        {actionLabel && onAction && (
+          <Button
+            disabled={disabled}
+            label={actionLabel}
+            onClick={handleCancel}
+            small
+          />
+        )}
       </div>
     </div>
   );
