@@ -1,3 +1,4 @@
+import getCurrentUser from "./actions/getCurrentUser";
 import getListings from "./actions/getListings";
 import Client from "./components/Client";
 import Container from "./components/Container";
@@ -6,6 +7,7 @@ import ListingItem from "./components/ListingItem";
 
 export default async function Home() {
   const listings = await getListings();
+  const currentUser = await getCurrentUser();
 
   if (listings.length === 0) {
     return (
@@ -22,7 +24,8 @@ export default async function Home() {
           {listings.map((listing) => {
             return (
               <ListingItem
-                title={listing.title}
+                currentUser={currentUser}
+                data={listing}
                 key={listing.id}
               />
             );
