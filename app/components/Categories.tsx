@@ -4,7 +4,16 @@ import React from "react";
 import Container from "./Container";
 import CategoryBox from "./CategoryBox";
 import { TbBeach } from "react-icons/tb";
-import { GiWindmill, GiIsland, GiBoatFishing, GiCastle, GiCaveEntrance, GiForestCamp, GiCactus, GiBarn } from "react-icons/gi";
+import {
+  GiWindmill,
+  GiIsland,
+  GiBoatFishing,
+  GiCastle,
+  GiCaveEntrance,
+  GiForestCamp,
+  GiCactus,
+  GiBarn,
+} from "react-icons/gi";
 import { TbMountain, TbPool } from "react-icons/tb";
 import { MdOutlineVilla } from "react-icons/md";
 import { usePathname, useSearchParams } from "next/navigation";
