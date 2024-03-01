@@ -28,11 +28,6 @@ interface ListingClientProps {
   currentUser?: User | null;
 }
 
-/**
- * Represents the ListingClient component.
- * @param {ListingClientProps} props - The component props.
- * @returns {React.FC} - The rendered ListingClient component.
- */
 const ListingClient: React.FC<ListingClientProps> = ({
   listing,
   // default value to use method like map, filter, reduce,...
@@ -102,6 +97,8 @@ const ListingClient: React.FC<ListingClientProps> = ({
         // explain: 86400000 = 24 * 60 * 60 * 1000
         (dateRange.endDate.getTime() - dateRange.startDate.getTime()) / 86400000
       );
+
+      // const days = differenceInDays(dateRange.endDate, dateRange.startDate);
 
       if (days && listing.price) {
         setTotalPrice(days * listing.price);

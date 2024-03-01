@@ -17,7 +17,7 @@ interface UserMenuProps {
 const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
-  const rentModal = useRentModal(); 
+  const rentModal = useRentModal();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -32,7 +32,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
     // open the rent modal
     rentModal.onOpen();
-  }, [currentUser, loginModal, rentModal])
+  }, [currentUser, loginModal, rentModal]);
 
   return (
     <div className="relative">
@@ -62,6 +62,16 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
       {isOpen && (
         <div className="absolute w-[40vw] md:w-[16vw] rounded-xl bg-white shadow-md right-0 top-16 md:top-12 overflow-hidden">
           <div className="flex flex-col cursor-pointer">
+            {currentUser && (
+              <div>
+                <p className="p-3">
+                  Hello,{" "}
+                  <span className="font-semibold">{currentUser.name}</span>
+                </p>
+
+                <hr />
+              </div>
+            )}
             {currentUser ? (
               <>
                 <MenuItem
