@@ -5,11 +5,11 @@ const Search = () => {
   return (
     <div className="border-[1px] w-full md:w-auto py-2 rounded-full shadow-sm hover:shadow-lg transition cursor-pointer">
       <div className="flex items-center justify-between">
-        <div className="text-sm font-semibold px-6">Search</div>
+        <div className="text-sm font-semibold px-6 border-r-[1px]">Search</div>
 
-        <div className="hidden md:block text-sm font-semibold px-6 border-x-[1px] md:flex-1 text-center">
+        {/* <div className="hidden md:block text-sm font-semibold px-6 border-x-[1px] md:flex-1 text-center">
           test
-        </div>
+        </div> */}
 
         <div className="text-sm pl-6 pr-2 text-gray-600 flex items-center gap-3">
           <div className="hidden sm:block">Add guests</div>

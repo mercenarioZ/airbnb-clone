@@ -36,10 +36,11 @@ const RegisterModal = () => {
     axios
       .post("/api/register", data)
       .then(() => {
+        // display a success message
+        toast.success("Sign up successful!");
         registerModal.onClose();
         
-        // display a success message
-        toast.success("Sign up successful!")
+        loginModal.onOpen();
       })
       .catch((error) => {
         console.log(error);
@@ -50,7 +51,7 @@ const RegisterModal = () => {
   const toggleModal = useCallback(() => {
     registerModal.onClose();
     loginModal.onOpen();
-  }, [loginModal, registerModal])
+  }, [loginModal, registerModal]);
 
   const body = (
     <div className="flex flex-col gap-4">
@@ -102,7 +103,12 @@ const RegisterModal = () => {
 
       <div className="flex gap-1 text-neutral-600">
         <p>Already have an account?</p>
-        <p className="hover:text-rose-500 hover:underline transition cursor-pointer" onClick={toggleModal}>Login</p>
+        <p
+          className="hover:text-rose-500 hover:underline transition cursor-pointer"
+          onClick={toggleModal}
+        >
+          Login
+        </p>
       </div>
     </div>
   );
