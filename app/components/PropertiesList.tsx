@@ -1,14 +1,13 @@
 "use client";
 
 import { Listing, User } from "@prisma/client";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { SafeReservation } from "../types/types";
+import toast from "react-hot-toast";
 import Container from "./Container";
 import Heading from "./Heading";
 import ListingItem from "./ListingItem";
-import axios from "axios";
-import toast from "react-hot-toast";
 
 interface PropertiesListProps {
   listings: Listing[];
@@ -22,17 +21,18 @@ const PropertiesList: React.FC<PropertiesListProps> = ({
   const router = useRouter();
   const [deleteId, setDeleteId] = useState("");
 
-  const handleCancel = (id: string) => {
+  const handleDelete = (id: string) => {
     setDeleteId(id);
 
     axios
       .delete(`/api/listings/${id}`)
       .then(() => {
-        router.refresh();
         toast.success("Listing deleted successfully!");
+
+        router.refresh();
       })
       .catch(() => {
-        toast.error("Failed to delete listing!");
+        toast.error("Failed!");
       })
       .finally(() => setDeleteId(""));
   };
@@ -50,7 +50,7 @@ const PropertiesList: React.FC<PropertiesListProps> = ({
             <ListingItem
               key={listing.id}
               actionId={listing.id}
-              onAction={handleCancel}
+              onAction={handleDelete}
               currentUser={currentUser}
               disabled={deleteId === listing.id}
               actionLabel="Delete this listing"

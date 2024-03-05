@@ -1,10 +1,8 @@
 import getCurrentUser from "../actions/getCurrentUser";
 import getListings from "../actions/getListings";
-import getReservations from "../actions/getReservations";
 import Client from "../components/Client";
 import EmptyState from "../components/EmptyState";
 import PropertiesList from "../components/PropertiesList";
-import TripsList from "../components/TripsList";
 
 const Properties = async () => {
   const currentUser = await getCurrentUser();
